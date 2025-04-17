@@ -1,0 +1,22 @@
+{
+  "title": "Chat with Kanha Khantaal's Resume",
+  "date": "2025-04-17 15:27:23",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What are Kanha's technical skills?"
+    },
+    {
+      "role": "assistant",
+      "content": "Kanha's technical skills include programming languages such as C, C++, Python, Java, and SQL, as well as database systems and software engineering. Additionally, he has experience with compiler design, AWS solution architecture, embedded systems, cryptography, and network security. Kanha also has a diverse range of technical interest areas such as mathematics, computer architecture, operating systems, artificial intelligence fundamentals, and network and database systems."
+    },
+    {
+      "role": "user",
+      "content": "Tell me about Kanha's RAG projects"
+    },
+    {
+      "role": "assistant",
+      "content": "Kanha Khantaal has developed a custom RAG-based chatbot for an hospital, which uses Python, LangChain, and custom vector embeddings."
+    }
+  ]
+}
