@@ -13,7 +13,7 @@ load_dotenv()
 HF_TOKEN = os.getenv("HF_TOKEN")
 OR_TOKEN = os.getenv("OR_TOKEN")
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder='templates')
 retriever = None
 client = None
 chat_history = []
@@ -136,4 +136,4 @@ def download_chat():
 
 if __name__ == '__main__':
     initialize_chatbot()
-    app.run(debug=True)
+    app.run(debug=False)
