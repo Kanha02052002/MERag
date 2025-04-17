@@ -15,7 +15,10 @@ This project is an **end-to-end intelligent chatbot** designed to answer questio
 
 ---
 ## 🎥 Demo
-![Demo Video](static/Demo/demo.mkv)
+
+Watch the working demo of the Resume Chatbot:
+
+🔗 [Click here to view demo video on Google Drive](https://drive.google.com/file/d/1GVM8teHJM4MyzSRx6tYjoxtvIYqCim_m/view?usp=drive_link)
 
 ---
 ## 📌 Features
