@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanha's Resume Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0d6efd;           
+            --secondary-color: #3b82f6;         
+            --background-dark: #0f172a;         
+            --background-glass: rgba(255, 255, 255, 0.04);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-light: #f1f5f9;              
+            --text-muted: #94a3b8;              
+            --message-user-bg: rgba(59, 130, 246, 0.15);     
+            --message-ai-bg: rgba(255, 255, 255, 0.06);      
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .sidebar {
+            background-color: var(--background-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 20px;
+            height: calc(100vh - 40px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            flex: 1;
+            max-width: 350px; 
+            margin-right: 20px;
+        }
+        .chat-container {
+            background-color: var(--background-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 20px;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            flex: 3;
+        }
+        
+        .profile-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        
+        .user-message {
+            background-color: var(--message-user-bg);
+            margin-left: auto;
+            border: 1px solid var(--primary-color);
+            border-bottom-right-radius: 5px;
+        }
+        
+        .assistant-message {
+            background-color: var(--message-ai-bg);
+            margin-right: auto;
+            border: 1px solid var(--secondary-color);
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex-grow: 1;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            padding: 10px 15px;
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+        }
+        
+        .chat-input input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            border-radius: 20px;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-secondary {
+            border-radius: 20px;
+            color: var(--text-light);
+            border-color: var(--border-glass);
+            background-color: transparent;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: var(--secondary-color);
+            color: #fff;
+            border-color: var(--secondary-color);
+        }
+        
+        .sample-question {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        
+        .social-links {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        
+        .social-link:hover {
+            color: var(--secondary-color);
+        }
+        
+        .social-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .empty-chat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+        }
+        
+        .empty-chat i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--border-glass);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--text-muted);
+        }
+        
+        .typing-indicator {
+            display: inline-block;
+            width: 50px;
+            text-align: left;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            margin-right: 5px;
+            animation: typing 1s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+            margin-right: 0;
+        }
+        
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 10px;
+            }
+        
+            .sidebar {
+                max-width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        
+            .chat-container {
+                flex: 1;
+                margin-bottom: 20px;
+            }
+        
+            .profile-img {
+                width: 100px;
+                height: 100px;
+            }
+        
+            .btn-primary, .btn-outline-secondary {
+                width: 100%;
+            }
+        
+            .social-links {
+                padding: 10px;
+            }
+        }
+        #user-input::placeholder {
+            color: #f1f5f9;
+        }
+        #user-input:focus::placeholder {
+            color: black;
+        }
+        #user-input:focus {
+            color: black;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <div class="profile-container">
+                        <h3 class="mt-3">K2G's MeRAG</h3>
+                    </div>
+                    <div class="mb-4">
+                        <h5>Frequently Asked Questions</h5>
+                        <div class="sample-questions">
+                            {% for question in sample_questions %}
+                            <div class="sample-question">
+                                <button class="btn btn-outline-secondary btn-sm w-100 text-start sample-btn" data-question="{{ question }}">
+                                    {{ question }}
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h5>Chat Controls</h5>
+                        <div class="d-flex justify-content-between mb-3">
+                            <button id="clear-chat" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-trash"></i> Clear Chat
+                            </button>
+                            <a id="download-chat" href="/download_chat" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-download"></i> Save Chat
+                            </a>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <h5>Connect with Kanha</h5>
+                        <a href="https://www.linkedin.com/in/kanha-khantaal/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i> LinkedIn Profile
+                        </a>
+                        <a href="https://github.com/kanha-khantaal" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i> GitHub Profile
+                        </a>
+                        <a href="path/to/kanha-resume.pdf" download class="social-link">
+                            <i class="fas fa-download"></i> Download Resume
+                        </a>
+                        <a href="https://github.com/kanha-khantaal/your-project-repository" target="_blank" class="social-link">
+                            <i class="fas fa-code"></i> Source Code
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="empty-chat" id="empty-chat">
+                            <i class="fas fa-comments"></i>
+                            <p>Start a conversation with the AI assistant!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="loading" id="loading">
+                        <span>Merag is thinking</span>
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" id="user-input" placeholder="Ask something about Kanha's resume..." class="form-control">
+                        <button id="send-btn" class="btn btn-primary" style="border-radius: 15px">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            loadChatHistory();
+            $('#send-btn').click(function() {
+                sendMessage();
+            });
+            $('#user-input').keypress(function(e) {
+                if (e.which === 13) {
+                    sendMessage();
+                }
+            });
+            $('#clear-chat').click(function() {
+                $.post('/clear_history', function() {
+                    $('#chat-messages').empty();
+                    $('#empty-chat').show();
+                });
+            });
+            $('.sample-btn').click(function() {
+                const question = $(this).data('question');
+                $('#user-input').val(question);
+                sendMessage();
+            });
+            
+            function sendMessage() {
+                const userInput = $('#user-input').val().trim();
+                
+                if (!userInput) return;
+                $('#empty-chat').hide();
+                
+                const userTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                $('#chat-messages').append(`
+                    <div class="message user-message">
+                        <strong>You</strong>
+                        <div>${userInput}</div>
+                        <div class="message-time">${userTime}</div>
+                    </div>
+                `);
+                
+                $('#user-input').val('');
+                
+                scrollToBottom();
+                $('#loading').show();
+                $.ajax({
+                    url: '/ask',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({query: userInput}),
+                    success: function(data) {
+                        $('#loading').hide();
+                        $('#chat-messages').append(`
+                            <div class="message assistant-message">
+                                <strong>AI Assistant</strong>
+                                <div>${data.response}</div>
+                                <div class="message-time">${data.timestamp}</div>
+                            </div>
+                        `);
+                        scrollToBottom();
+                    },
+                    error: function(xhr) {
+                        $('#loading').hide();
+                        $('#chat-messages').append(`
+                            <div class="message assistant-message">
+                                <strong>AI Assistant</strong>
+                                <div>Sorry, I encountered an error. Please try again.</div>
+                                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                            </div>
+                        `);
+                        scrollToBottom();
+                    }
+                });
+            }
+            
+            function loadChatHistory() {
+                $.get('/history', function(data) {
+                    if (data.length > 0) {
+                        $('#empty-chat').hide();
+                        
+                        data.forEach(function(message, index) {
+                            const messageTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            
+                            if (message.role === 'user') {
+                                $('#chat-messages').append(`
+                                    <div class="message user-message">
+                                        <strong>You</strong>
+                                        <div>${message.content}</div>
+                                        <div class="message-time">${messageTime}</div>
+                                    </div>
+                                `);
+                            } else {
+                                $('#chat-messages').append(`
+                                    <div class="message assistant-message">
+                                        <strong>AI Assistant</strong>
+                                        <div>${message.content}</div>
+                                        <div class="message-time">${messageTime}</div>
+                                    </div>
+                                `);
+                            }
+                        });
+                        
+                        scrollToBottom();
+                    }
+                });
+            }
+            
+            function scrollToBottom() {
+                const chatContainer = document.getElementById('chat-messages');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
